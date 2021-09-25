@@ -14,7 +14,11 @@ function App() {
 
   //state validacion para consultar API
   const [consultar, setConsultar] = useState(false);
+
+  //Almacena la respuesta de la API
   const [resultado, setResultado] = useState({});
+
+  //si hay un error en la llamada a la API
   const [error, setError] = useState(false);
 
   //Extrae ciudad y pais
@@ -40,9 +44,12 @@ function App() {
         }
       }
     };
+
     consultarAPI();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [consultar]);
 
+  //Carga condicional de componente
   let componente;
   if (error) {
     componente = <Error mensaje="No hay Resultado" />;
