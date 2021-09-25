@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 
-const Formulario = () => {
-  //state del formulario
-  const [busqueda, setBusqueda] = useState({
-    ciudad: "",
-    pais: "",
-  });
+const Formulario = ({ busqueda, setBusqueda, setConsultar }) => {
+  //state de error
+  const [error, setError] = useState(false);
 
   //Extrae ciudad y pais
   const { ciudad, pais } = busqueda;
@@ -19,9 +16,27 @@ const Formulario = () => {
     });
   };
 
+  //cuando el usuario da submit al form
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    //Validar
+    if (ciudad.trim() === "" || pais.trim() === "") {
+      setError(true);
+      setConsultar(false);
+      return;
+    }
+    setError(false);
+
+    setConsultar(true);
+  };
+
   return (
     <>
-      <form>
+      {error ? (
+        <p className="error red darken-4">Todos los campos son obligatorios</p>
+      ) : null}
+      <form onSubmit={handleSubmit}>
         <div className="input-field col s12">
           <input
             type="text"
@@ -273,6 +288,14 @@ const Formulario = () => {
           </select>
 
           <label htmlFor="pais">País: </label>
+        </div>
+        <div className="input-field col s12">
+          <button
+            type="submit"
+            className="waves-effect waves-light btn-large btn-block yellow accent-4 col s12"
+          >
+            Buscar Clima
+          </button>
         </div>
       </form>
     </>
