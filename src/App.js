@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 
 import Header from "./components/Header";
 import Formulario from "./components/Formulario";
+import Clima from "./components/Clima";
+import Error from "./components/Error";
 
 function App() {
   //state de busqueda
@@ -12,6 +14,8 @@ function App() {
 
   //state validacion para consultar API
   const [consultar, setConsultar] = useState(false);
+  const [resultado, setResultado] = useState({});
+  const [error, setError] = useState(false);
 
   //Extrae ciudad y pais
   const { ciudad, pais } = busqueda;
@@ -24,11 +28,27 @@ function App() {
 
         const respuesta = await fetch(url);
         const resultado = await respuesta.json();
-        console.log(resultado);
+
+        setResultado(resultado);
+        setConsultar(false);
+
+        //Detecta si hubo resultados correctos con la consulta
+        if (resultado.cod === "404") {
+          setError(true);
+        } else {
+          setError(false);
+        }
       }
     };
     consultarAPI();
   }, [consultar]);
+
+  let componente;
+  if (error) {
+    componente = <Error mensaje="No hay Resultado" />;
+  } else {
+    componente = <Clima resultado={resultado} />;
+  }
 
   return (
     <>
@@ -44,7 +64,7 @@ function App() {
                 setConsultar={setConsultar}
               />
             </div>
-            <div className="col m6 s12">2</div>
+            <div className="col m6 s12">{componente}</div>
           </div>
         </div>
       </div>
